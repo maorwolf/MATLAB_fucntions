@@ -1,0 +1,146 @@
+% first step - open: home>meg>ducoments>MATLAB>MatlabTools>C50Hz2msi.m
+% Replace the path to your file and run it.
+
+subnum = 13; %change
+
+orig = ['save ','ma',num2str(subnum),'orig', ' dataorig'];
+clean = ['save ','ma',num2str(subnum),'cln', ' datacln'];
+components = ['save ','ma',num2str(subnum),'comp',' comp'];
+ica = ['save ','ma',num2str(subnum),'ica', ' dataica'];
+
+%% defining trials in all the data.
+cfg=[];
+cfg.trialdef.version='m';
+cfg.dataset='c,rfhp1.0Hz,lp'; % change file name or path+name
+cfg.trialdef.eventtype='TRIGGER';
+cfg.trialdef.eventvalue=[10,20,30,40]; % all conditions.
+cfg.trialdef.prestim=0.2;
+cfg.trialdef.poststim=0.8;
+cfg.trialdef.offset=0;
+cfg.trialdef.rspwin = 2.5;
+cfg.trialdef.visualtrig='before'; 
+cfg.trialdef.visualtrigwin=0.3;
+cfg.trialdef.powerline='yes'; % takes into account triggers that contain the electricity in the wall (+256).
+cfg.trialfun='BIUtrialfun'; % to make sure it is my function with 'right answer' colume.
+cfg=definetrial(cfg);
+
+% preprocessing 
+cfg.blc='yes';
+cfg.continuous='yes';
+cfg.blcwindow=[-0.2,0];
+cfg.lpfilter='yes';
+cfg.lpfreq=50;
+dataorig=preprocessing(cfg);
+eval(orig); 
+
+%% artifact rejection
+%remove muscle
+cfg.artfctdef.muscle.feedback='yes';
+cfg.artfctdef.muscle. channel='MEG';
+cfg=artifact_muscle(cfg);
+
+%remove jump
+cfg.artfctdef.jump.feedback='yes';
+cfg.artfctdef.jump.channel='MEG';
+cfg=artifact_jump(cfg);
+
+%reject artifacts
+cfg.artfctdef.reject = 'complete';   % this rejects complete trials, use 'partial' if you want to do partial artifact rejection
+datacln = rejectartifact(cfg);
+datacln = preprocessing(datacln) 
+eval(clean);
+
+%rejectvisual summary
+cfg=[];
+cfg.method='summary';
+cfg.channel='MEG';
+cfg.alim=1e-12;
+datacln=rejectvisual(cfg, datacln); % reject all bad trials/channels manually
+
+%rejectvisual trial
+cfg=[];
+cfg.method='trial';
+cfg.channel='MEG';
+cfg.alim=1e-12;
+datacln=rejectvisual(cfg, datacln); % reject all bad trials/channels manually
+
+% save only after choosing the trials/channels manually
+eval(clean);
+ 
+%% ICA to correct data
+
+%resampling data to speed the ica
+cfg            = [];
+cfg.resamplefs = 300;
+cfg.detrend    = 'no';
+dummy           = resampledata(cfg, datacln);
+save dummy dummy
+
+%run ica
+cfg            = [];
+cfg.channel    = {'MEG'};
+comp           = componentanalysis(cfg, dummy);
+eval(components);
+
+%prepare the layout
+cfg = [];
+cfg.grad = dummy.grad;
+lay = prepare_layout(cfg);
+
+%see the components and find the artifact
+cfg=[];
+cfg.comp=[1:20];
+cfg.layout=lay;
+comppic=componentbrowser(cfg,comp);
+
+%run the ICA in the original data
+cfg = [];
+cfg.topo      = comp.topo;
+cfg.topolabel = comp.topolabel;
+comp_orig     = componentanalysis(cfg, datacln);
+
+%remove the artifact component
+cfg = [];
+cfg.component = [1 2 3 4]; % change
+dataica = rejectcomponent(cfg, comp_orig);
+eval(ica);
+
+%% defining trials (for correct answers only)
+% define
+cfg=[];
+cfg.cond=10;
+cond10=splitcondscrt(cfg,dataica);
+cfg=[];
+cfg.cond=20;
+cond20=splitcondscrt(cfg,dataica);
+cfg=[];
+cfg.cond=30;
+cond30=splitcondscrt(cfg,dataica);
+cfg=[];
+cfg.cond=40;
+cond40=splitcondscrt(cfg,dataica);
+
+% average
+avcond10=timelockanalysis(cfg,cond10);
+avcond20=timelockanalysis(cfg,cond20);
+avcond30=timelockanalysis(cfg,cond30);
+avcond40=timelockanalysis(cfg,cond40);
+avallcond=timelockanalysis(cfg,dataica)
+
+% interactive plot multi conditions
+cfg=[];
+cfg.interactive='yes';
+cfg.layout='4D248.lay';
+multiplotER(cfg,avcond10,avcond20,avcond30,avcond40);
+
+% interactive plot single condition
+multiplotER(cfg,avcond10);
+
+% interactive plot single condition
+multiplotER(cfg,avcond20);
+
+% interactive plot single condition
+multiplotER(cfg,avcond30);
+
+% interactive plot single condition
+multiplotER(cfg,avcond40);

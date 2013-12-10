@@ -1,0 +1,13 @@
+clear all
+subsCon = [0:3 5:9 12 15 20 32 36 39];
+for i = subsCon
+    eval(['load /home/meg/Data/Maor/SchizoProject/Subjects/AviMa',num2str(i),'/1/timeFrequency/TFtest'])
+    eval(['sub',num2str(i),'AllLow = wordFirstLow;']);
+    eval(['sub',num2str(i),'AllHigh = wordFirstHigh;']);
+    eval(['sub',num2str(i),'AllLow.powspctrm = [wordFirstLow; wordSecondLow; wordSingleLow; nonWordFirstLow; nonWordSecondLow; nonWordSingleLow;']);
+    eval(['sub',num2str(i),'AllHigh.powspctrm = [wordFirstHigh; wordSecondHigh; wordSingleHigh; nonWordFirstHigh; nonWordSecondHigh; nonWordSingleHigh;']);
+    clear nonWordFirstHigh nonWordFirstLow nonWordSecondHigh nonWordSecondLow...
+        nonWordSingleHigh nonWordSingleLow wordFirstHigh wordFirstLow wordSecondHigh...
+        wordSecondLow wordSingleHigh wordSingleLow
+end;
+
