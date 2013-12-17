@@ -11,16 +11,22 @@ ylabel('Trials (Y)')
 eval(['title(''comp: ',num2str(comp),''')'])
 cut = input('Do you want to enter a cutoff? [1 - yes ; 0 - no] \n');
 if cut == 1
-    cutOff=input('What is the cutoff (for example 1*10^(-13))? \n');
+    cutOff=input('What is the absolute cutoff (for example 0.75)? \n');
     for i=1:size(m,1)
-        if sum(m(i,:)>cutOff)>0
+        if max(m(i,:))>cutOff*10^(-13) || abs(min(m(i,:)))>cutOff*10^(-13)
             remTrial(i)=1;
         end
     end
-    badTrials=find(remTrial==1);
-    disp(['trials above threshold limitis are saved in BadTrials']);
-    n=length(badTrials);
-    disp(['number of trials above threshold: ',num2str(n)]);   
+    if exist('remTrial');
+        badTrials=find(remTrial==1);
+    end;
+    if exist('remTrial');
+        disp(['trials above threshold limitis are saved in BadTrials']);
+        n=length(badTrials);
+        disp(['number of trials above threshold: ',num2str(n)]);
+    else
+        disp(['no trials above threshold']);
+    end
 else
     close all
 end
