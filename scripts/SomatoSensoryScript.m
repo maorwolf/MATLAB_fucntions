@@ -519,7 +519,9 @@ cfg.method='distance';
 cfg.neighbourdist = 0.04;
 cfg.layout='4D248.lay';
 neighbours = ft_prepare_neighbours(cfg, gravg);
-
+% cfg1.gradfile = 'e,rfhp1.0Hz,COH1';
+% cfg1.method='triangulation';
+% cfg.neighbours = ft_neighbourselection(cfg1);
 cfg = [];
 cfg.channel = {'MEG'};
 cfg.latency = [0 0.5];

@@ -17,15 +17,15 @@ if cut == 1
             remTrial(i)=1;
         end
     end
-    if exist('remTrial');
+    if exist('remTrial','var');
         badTrials=find(remTrial==1);
     end;
-    if exist('remTrial');
-        disp(['trials above threshold limitis are saved in BadTrials']);
+    if exist('remTrial','var');
+        disp('trials above threshold limitis are saved in BadTrials');
         n=length(badTrials);
         disp(['number of trials above threshold: ',num2str(n)]);
     else
-        disp(['no trials above threshold']);
+        disp('no trials above threshold');
     end
 else
     close all
