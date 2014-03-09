@@ -35,7 +35,7 @@ findBadChans(source);
 
 channels = {'MEG'}; % channels = {'MEG', '-A41'};% Roy - run this first.
 %% 3. finding trial
-sub=10; % change to sub number
+sub=13; % change to sub number
 condition_vector=[102 104 106 108];
 % 102 - pre right
 % 104 - pre left
@@ -116,7 +116,7 @@ comp     = ft_componentanalysis(cfg, dataorig);
 
 % remove the artifact components
 cfg = [];
-cfg.component = [ 1 4 6  ]; % enter the components numbers that you want to clean
+cfg.component = []; % enter the components numbers that you want to clean
 dataica = ft_rejectcomponent(cfg, comp);
 
 clear comp_dummy comppic comp dummy
@@ -171,7 +171,7 @@ load 1_40Hz/averagedata
 %   ------- Cleaning is Done ----------     %
 %   -----------------------------------     %
 %% 12. Plots
-sub=9; % change sub number
+sub=13; % change sub number
 % Butterfly
 figure;
 eval(['plot(sub',num2str(sub),'average.time, sub',num2str(sub),'average.avg,''b'')']);
@@ -231,21 +231,6 @@ cfg.channel='MEG';
 cfg.showlabels='yes';
 title('blue - right finger post; red - left finger post');
 eval(['ft_multiplotER(cfg,sub',num2str(sub),'con106, sub',num2str(sub),'con108);']);
-
-
-%% ---- THE END ----- (for Roy)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 % mesh and imagesc
@@ -519,9 +504,7 @@ cfg.method='distance';
 cfg.neighbourdist = 0.04;
 cfg.layout='4D248.lay';
 neighbours = ft_prepare_neighbours(cfg, gravg);
-% cfg1.gradfile = 'e,rfhp1.0Hz,COH1';
-% cfg1.method='triangulation';
-% cfg.neighbours = ft_neighbourselection(cfg1);
+
 cfg = [];
 cfg.channel = {'MEG'};
 cfg.latency = [0 0.5];
