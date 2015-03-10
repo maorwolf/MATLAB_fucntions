@@ -54,7 +54,7 @@ findBadChans(source);
 %original_source='c,rfhp0.1Hz';% we added this line to compare between the data before and after cleaning with the Abeles fucntion
 %findBadChans(original_source);
 
-channels = {'MEG'};
+channels = {'MEG'}; % channels = {'MEG','-A41'};
 
 % 2. finding trials and defining them
 conditions = [110 120 130 140 150 160];
@@ -65,6 +65,8 @@ cfg.trialdef.prestim    = 1;
 cfg.trialdef.poststim   = 1;
 cfg.trialdef.offset=-1;
 cfg.trialfun='BIUtrialfun';
+% if no visual trigger was recorded:
+% cfg.trl(:,[1,2])=cfg.trl(:,[1,2])+48;
 if sub == 15 || sub == 24 || sub == 25
     cfg = ft_definetrial(cfg);
     cfg.trl(:,[1 2]) = cfg.trl(:,[1 2]) + 48;
@@ -92,8 +94,6 @@ for i=1:length(cfg.trl)
     end;
 end;
 
-% if no visual trigger was recorded:
-% cfg.trl(:,[1,2])=cfg.trl(:,[1,2])+48;
 
 % 3. preprocessing for muscle artifact rejection
 cfg.demean='yes'; % normalize the data according to the base line average time window (see two lines below)
@@ -159,14 +159,6 @@ seeOneComp(comp_dummy) % change the number of components you want to see
 % use this visualisation for choosing the trials to delete from the
 % original data so you won't have to mess with the data by doing ICA
 
-% comp=2; % change according to the component you want to see
-% m=zeros(length(comp_dummy.trial),length(comp_dummy.time{1,1}));
-% for i=1:length(comp_dummy.trial)
-% m(i,:)=comp_dummy.trial{1,i}(comp,:);
-% end;
-% figure;mesh(m)
-% figure;imagesc(m)
-
 % run the ICA on the original data
 cfg = [];
 cfg.topo      = comp_dummy.topo;
@@ -225,7 +217,7 @@ datafinal.cfg.trl(:,4:7)=datafinal.trialinfo(:,1:4);
 
 save datafinal datafinal
 
-% 10. split conditions
+% 10. split conditions (correct answers only)
 cfg=[];
 for i = [110 120 130 140 150 160]
     eval(['cfg.cond=',num2str(i),';']);

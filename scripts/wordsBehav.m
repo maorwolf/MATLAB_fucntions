@@ -218,7 +218,7 @@ end;
 clear all;
 % good subs (according to erf)
 control = [0:3, 5:9, 12, 15, 20, 32, 36, 39, 41];
-SZ = [14, 16, 17, 19, 21, 23:25, 27:29, 31, 33:35, 37];
+SZ = [14, 16, 17, 19, 21, 23 25, 27 28, 31, 33:35, 37];
 
 a=1;
 for i = control
@@ -280,8 +280,86 @@ clear all
 load behavWord
 
 %% plotting
-figure;
+% 1. for ER
+%   1.1 for Single
+%       1.1.1 for group
+        conER = [ERcontrol(:,1); ERcontrol(:,2)];
+        szER = [ERSZ(:,1); ERSZ(:,2)];
+        sd = [std(conER)./sqrt(16) std(szER)./sqrt(14)];
+        means = [mean(conER) mean(szER)];
+        figure;
+        h = barwitherr(sd, means);
+        xlim([0 3])
+        title('Errors');
+        ylabel('Number of Errors');
+        set(gca, 'XTickLabel', {'Control', 'SZ'});
+        set(h(1), 'facecolor', [0.8 0.1 0.1]);
+%   1.2 for Repeat
+%       1.2.1 for group
+        conER = [ERcontrol(:,3);ERcontrol(:,4);ERcontrol(:,5);ERcontrol(:,6)];
+        szER = [ERSZ(:,3);ERSZ(:,4);ERSZ(:,5);ERSZ(:,6)];
+        sd = [std(conER)./sqrt(16) std(szER)./sqrt(14)];
+        means = [mean(conER) mean(szER)];
+        figure;
+        h = barwitherr(sd, means);
+        xlim([0 3])
+        title('Errors');
+        ylabel('Number of Errors');
+        set(gca, 'XTickLabel', {'Control', 'SZ'});
+        set(h(1), 'facecolor', [0.8 0.1 0.1]);
+%       1.2.2 for repeat x word
+        first = [[ERcontrol(:,3);ERSZ(:,3)],[ERcontrol(:,4);ERSZ(:,4)]];
+        second = [[ERcontrol(:,5);ERSZ(:,5)],[ERcontrol(:,6);ERSZ(:,6)]];
+        means = [mean(first);mean(second)];
+        sd = [std(first)./sqrt(30);std(second)./sqrt(30)];
+        figure;
+        h=barwitherr(sd, means);
+        title('Errors');
+        ylabel('Number of Errors');
+        set(h(1), 'facecolor', [0 0.3 0.6]);
+        set(h(2), 'facecolor', [0.3 0.2 0.4]);
+        set(gca, 'XTickLabel', {'First';'Second'});
+        legend('Word','Non Word');
 
+% 2. for RT
+%   2.1 for single
+%       2.1.1 for grp x word
+        means = RTmean(:,[1 2]);
+        sd = RTsd(:,[1 2]);
+        figure;
+        h=barwitherr(sd', means');
+        title('Single');
+        ylabel('RT');
+        ylim([400 1100]);
+        set(h(1), 'facecolor', [1 1 0]);
+        set(h(2), 'facecolor', [0.3 0.5 0]);
+        set(gca, 'XTickLabel', {'Word';'Non Word'});
+        legend('SZ','Control');
+%   2.2 for repeat
+%       2.2.1 for group
+        means = [mean([RTcontrol(:,3);RTcontrol(:,4);RTcontrol(:,5);RTcontrol(:,6)]), mean([RTSZ(:,3);RTSZ(:,4);RTSZ(:,5);RTSZ(:,6)])];
+        sd = [std([RTcontrol(:,3);RTcontrol(:,4);RTcontrol(:,5);RTcontrol(:,6)])./sqrt(16), std([RTSZ(:,3);RTSZ(:,4);RTSZ(:,5);RTSZ(:,6)])./sqrt(14)];
+        figure;
+        h = barwitherr(sd, means);
+        xlim([0 3])
+        title('Repeat');
+        ylabel('RT');
+        set(gca, 'XTickLabel', {'Control', 'SZ'});
+        set(h(1), 'facecolor', [0.8 0.1 0.1]);
+%       2.2.2 for repeat x word
+        means = [mean([RTcontrol(:,3);RTSZ(:,3)]), mean([RTcontrol(:,4);RTSZ(:,4)]); mean([RTcontrol(:,5);RTSZ(:,5)]), mean([RTcontrol(:,6);RTSZ(:,6)])];
+        sd = [std([RTcontrol(:,3);RTSZ(:,3)])./sqrt(30), std([RTcontrol(:,4);RTSZ(:,4)])./sqrt(30); std([RTcontrol(:,5);RTSZ(:,5)])./sqrt(30), std([RTcontrol(:,6);RTSZ(:,6)])./sqrt(30)];
+        figure;
+        h=barwitherr(sd, means);
+        title('Repeat');
+        ylabel('RT');
+        ylim([600 800]);
+        set(h(1), 'facecolor', [0 0.3 0.6]);
+        set(h(2), 'facecolor', [0.3 0.2 0.4]);
+        set(gca, 'XTickLabel', {'First';'Second'});
+        legend('Word','Non Word');
+
+figure;
 subplot(2,1,1)
 h1 = barwitherr(ERsd'./4, ERmean');% Plot with errorbars
 title('Errors');

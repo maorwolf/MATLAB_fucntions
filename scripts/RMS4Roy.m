@@ -1,5 +1,9 @@
 %% RMS Analysis
-subs = [1 4:11 13:16];
+% 102 - pre right
+% 104 - pre left
+% 106 - post right
+% 108 - post left
+subs = [1 4:16];
 for i = subs
     eval(['cd /home/meg/Data/Maor/Hypnosis/Subjects/HypCon',num2str(i),'/1_40Hz']);
     load averagedata
@@ -53,7 +57,7 @@ plot(time,meanCon102RMSL,'b') % LH pre right
 hold on;
 jbfill(time,meanCon102RMSL+seCon102RMSL,meanCon102RMSL-seCon102RMSL,[0,0,1],[0,0,1],0,0.3)
 plot(time,meanCon106RMSL,'r') % LH post right
-title('blue: pre right RMSL           red: post right RMSL')
+title('Right Hand (n=14); Blue - pre hypnosis, Red - during hypnosis');
 jbfill(time,meanCon106RMSL+seCon106RMSL,meanCon106RMSL-seCon106RMSL,[1,0,0],[1,0,0],0,0.3)
 grid;
 subplot(2,1,2)
@@ -61,7 +65,7 @@ plot(time,meanCon104RMSR,'b') % RH pre left
 hold on;
 jbfill(time,meanCon104RMSR+seCon104RMSR,meanCon104RMSR-seCon104RMSR,[0,0,1],[0,0,1],0,0.3)
 plot(time,meanCon108RMSR,'r') % RH post left
-title('blue: pre left RMSR           red: post left RMSR')
+title('Left Hand (n=14); Blue - pre hypnosis, Red - during hypnosis');
 jbfill(time,meanCon108RMSR+seCon108RMSR,meanCon108RMSR-seCon108RMSR,[1,0,0],[1,0,0],0,0.3)
 grid;
 
@@ -71,8 +75,8 @@ hold on;
 plot(time, meanCon104RMSR - meanCon108RMSR, 'r')
 grid;
 
-% RMS differences table for the 3 comps: 157-203ms, 232-292ms, 311-500ms
-for i = 1:13
+% RMS differences table for 316-500ms
+for i = 1:14
 leftIndexRchans(i,:)=con104RMSR(i,:)-con108RMSR(i,:);
 rightIndexLchans(i,:)=con102RMSL(i,:)-con106RMSL(i,:);
 end;
@@ -83,16 +87,28 @@ hold on;
 plot(time,mean(rightIndexLchans),'r')
 grid;
 
-for i = 1:13
-    compsLeftIndex(i,1) = mean(leftIndexRchans(i,314:358));
-    compsRightIndex(i,1) = mean(rightIndexLchans(i,314:358));
-    compsLeftIndex(i,2) = mean(leftIndexRchans(i,390:451));
-    compsRightIndex(i,2) = mean(rightIndexLchans(i,390:451));
-    compsLeftIndex(i,3) = mean(leftIndexRchans(i,475:662));
-    compsRightIndex(i,3) = mean(rightIndexLchans(i,475:662));
+for i = 1:14
+    compsLeftIndex(i,1) = mean(leftIndexRchans(i,476:662));
+    compsRightIndex(i,1) = mean(rightIndexLchans(i,476:662));
 end;
 
 compsLeftIndex = compsLeftIndex.*10^(14);
 compsRightIndex = compsRightIndex.*10^(14);
+
+% comp 3 all conditions
+comp3PreRF_LH  = mean(con102RMSL(:,476:662),2);
+comp3PreRF_RH  = mean(con102RMSR(:,476:662),2);
+comp3PostRF_LH = mean(con106RMSL(:,476:662),2);
+comp3PostRF_RH = mean(con106RMSR(:,476:662),2);
+
+comp3PreLF_LH  = mean(con104RMSL(:,476:662),2);
+comp3PreLF_RH  = mean(con104RMSR(:,476:662),2);
+comp3PostLF_LH = mean(con108RMSL(:,476:662),2);
+comp3PostLF_RH = mean(con108RMSR(:,476:662),2);
+
+RMS_Con_Comp3 = [comp3PreRF_LH comp3PreRF_RH comp3PreLF_LH comp3PreLF_RH comp3PostRF_LH comp3PostRF_RH...
+     comp3PostLF_LH comp3PostLF_RH]
+RMS_Con_Comp3 = RMS_Con_Comp3.*10^14;
+save RMS_Con_Comp3 RMS_Con_Comp3
 
 % copy to excel and then to SPSS

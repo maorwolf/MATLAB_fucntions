@@ -32,7 +32,7 @@ cfg1.hpfilter='yes';
 cfg1.hpfreq=50;
 Aud=ft_preprocessing(cfg1);
 trigFixed=fixAudTrig(trig,Aud.trial{1,1},[],0.01,610);
-rewriteTrig(fileName,trigFixed,'fix',[]); % check the trigger
+rewriteTrig(fileName,trigFixed,'fix',[]); % check the triger
 
 %% find Bad Channels
 source='xc,hb,lf_c,rfhp0.1Hz';

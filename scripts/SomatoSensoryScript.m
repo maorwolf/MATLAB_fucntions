@@ -35,7 +35,7 @@ findBadChans(source);
 
 channels = {'MEG'}; % channels = {'MEG', '-A41'};% Roy - run this first.
 %% 3. finding trial
-sub=13; % change to sub number
+sub=3; % change to sub number
 condition_vector=[102 104 106 108];
 % 102 - pre right
 % 104 - pre left
@@ -59,15 +59,11 @@ cfg.baselinewindow=[-0.15,0];
 cfg.hpfilter='yes';
 cfg.hpfreq=60;
 cfg.channel = channels; % MEG channels configuration. Take the MEG channels and exclude the minus ones 
-cfg.padding = 10;
 dataorig=ft_preprocessing(cfg);
 
 %% 5. remove muscle artifact
 cfg1.method='summary'; %trial
 datacln=ft_rejectvisual(cfg1, dataorig);
-
-% to see again
-datacln=ft_rejectvisual(cfg1, datacln);
 
 %% 5.1 Deleting the bad trials from the original data so you don't refilter the data
 cfg.trl = [];
@@ -116,7 +112,7 @@ comp     = ft_componentanalysis(cfg, dataorig);
 
 % remove the artifact components
 cfg = [];
-cfg.component = []; % enter the components numbers that you want to clean
+cfg.component = [4]; % enter the components numbers that you want to clean
 dataica = ft_rejectcomponent(cfg, comp);
 
 clear comp_dummy comppic comp dummy
@@ -171,7 +167,7 @@ load 1_40Hz/averagedata
 %   ------- Cleaning is Done ----------     %
 %   -----------------------------------     %
 %% 12. Plots
-sub=13; % change sub number
+sub=12; % change sub number
 % Butterfly
 figure;
 eval(['plot(sub',num2str(sub),'average.time, sub',num2str(sub),'average.avg,''b'')']);
@@ -299,46 +295,46 @@ eval(['ft_topoplotER(cfg,sub',num2str(sub),'con108);']);
 %% --------------------------------------------------------------------------------------------------------------------------
 % grand averaging
 clear all
-subs=[7:12,14:19,21,25:28]; % total = 17 subs
+subs=[7:19, 21, 22, 25:28] % only good subs
 for i=subs
     eval(['load /home/meg/Data/Maor/Hypnosis/Subjects/Hyp',num2str(i),'/1_40Hz/averagedata']);
 end;
 
 cfg=[];
-cfg.keepindividual = 'yes';
+cfg.keepindividual = 'no';
 gravg=ft_timelockgrandaverage(cfg,sub7average, sub8average, sub9average, sub10average,...
-    sub11average, sub12average, sub14average, sub15average, sub16average, sub17average,...
-    sub18average, sub19average, sub21average, sub25average, sub26average, sub27average, sub28average);
+    sub11average, sub12average, sub13average, sub14average, sub15average, sub16average, sub17average,...
+    sub18average, sub19average, sub21average, sub22average, sub25average, sub26average, sub27average, sub28average);
 clear sub7average sub8average sub9average sub10average sub11average sub12average...
-sub14average sub15average sub16average sub17average sub18average sub19average...
-sub21average sub25average sub26average sub27average sub28average
+sub13average sub14average sub15average sub16average sub17average sub18average sub19average...
+sub21average sub22average sub25average sub26average sub27average sub28average 
 
 gravg102=ft_timelockgrandaverage(cfg,sub7con102, sub8con102, sub9con102, sub10con102,...
-    sub11con102, sub12con102, sub14con102, sub15con102, sub16con102, sub17con102, sub18con102,...
-    sub19con102, sub21con102, sub25con102, sub26con102, sub27con102, sub28con102);
-clear sub7con102 sub8con102 sub9con102 sub10con102 sub11con102 sub12con102 sub14con102...
-sub15con102 sub16con102 sub17con102 sub18con102 sub19con102 sub21con102 sub25con102 sub26con102...
+    sub11con102, sub12con102, sub13con102, sub14con102, sub15con102, sub16con102, sub17con102, sub18con102,...
+    sub19con102, sub21con102, sub22con102, sub25con102, sub26con102, sub27con102, sub28con102);
+clear sub7con102 sub8con102 sub9con102 sub10con102 sub11con102 sub12con102 sub13con102 sub14con102...
+sub15con102 sub16con102 sub17con102 sub18con102 sub19con102 sub21con102 sub22con102 sub25con102 sub26con102...
 sub27con102 sub28con102
 
 gravg104=ft_timelockgrandaverage(cfg,sub7con104, sub8con104, sub9con104, sub10con104,...
-    sub11con104, sub12con104, sub14con104, sub15con104, sub16con104, sub17con104, sub18con104,...
-    sub19con104, sub21con104, sub25con104, sub26con104, sub27con104, sub28con104);
-clear sub7con104 sub8con104 sub9con104 sub10con104 sub11con104 sub12con104 sub14con104...
-sub15con104 sub16con104 sub17con104 sub18con104 sub19con104 sub21con104 sub25con104 sub26con104...
+    sub11con104, sub12con104, sub13con104, sub14con104, sub15con104, sub16con104, sub17con104, sub18con104,...
+    sub19con104, sub21con104, sub22con104, sub25con104, sub26con104, sub27con104, sub28con104);
+clear sub7con104 sub8con104 sub9con104 sub10con104 sub11con104 sub12con104 sub13con104 sub14con104...
+sub15con104 sub16con104 sub17con104 sub18con104 sub19con104 sub21con104 sub22con104 sub25con104 sub26con104...
 sub27con104 sub28con104
 
 gravg106=ft_timelockgrandaverage(cfg,sub7con106, sub8con106, sub9con106, sub10con106,...
-    sub11con106, sub12con106, sub14con106, sub15con106, sub16con106, sub17con106, sub18con106,...
-    sub19con106, sub21con106, sub25con106, sub26con106, sub27con106, sub28con106);
-clear sub7con106 sub8con106 sub9con106 sub10con106 sub11con106 sub12con106 sub14con106...
-sub15con106 sub16con106 sub17con106 sub18con106 sub19con106 sub21con106 sub25con106 sub26con106...
+    sub11con106, sub12con106, sub13con106, sub14con106, sub15con106, sub16con106, sub17con106, sub18con106,...
+    sub19con106, sub21con106, sub22con106, sub25con106, sub26con106, sub27con106, sub28con106);
+clear sub7con106 sub8con106 sub9con106 sub10con106 sub11con106 sub12con106 sub13con106 sub14con106...
+sub15con106 sub16con106 sub17con106 sub18con106 sub19con106 sub21con106 sub22con106 sub25con106 sub26con106...
 sub27con106 sub28con106
 
 gravg108=ft_timelockgrandaverage(cfg,sub7con108, sub8con108, sub9con108, sub10con108,...
-    sub11con108, sub12con108, sub14con108, sub15con108, sub16con108, sub17con108, sub18con108,...
-    sub19con108, sub21con108, sub25con108, sub26con108, sub27con108, sub28con108);
-clear sub7con108 sub8con108 sub9con108 sub10con108 sub11con108 sub12con108 sub14con108...
-sub15con108 sub16con108 sub17con108 sub18con108 sub19con108 sub21con108 sub25con108 sub26con108...
+    sub11con108, sub12con108, sub13con108, sub14con108, sub15con108, sub16con108, sub17con108, sub18con108,...
+    sub19con108, sub21con108, sub22con108, sub25con108, sub26con108, sub27con108, sub28con108);
+clear sub7con108 sub8con108 sub9con108 sub10con108 sub11con108 sub12con108 sub13con108 sub14con108...
+sub15con108 sub16con108 sub17con108 sub18con108 sub19con108 sub21con108 sub22con108 sub25con108 sub26con108...
 sub27con108 sub28con108
 
 save gravgs gravg gravg102 gravg104 gravg106 gravg108
@@ -364,24 +360,35 @@ plot(gravg104.time,gravg106.avg,'r')
 title('Right Pre (blue) and Right Post (red)');
 
 %% topoplot
-% right index
+load LRpairs
+chansL = ismember(gravg102.label, LRpairs(:,1));
+chansR = ismember(gravg102.label, LRpairs(:,2));
+gravg102.avg(find(chansR),:)=0;
+gravg106.avg(find(chansR),:)=0;
+gravg104.avg(find(chansL),:)=0;
+gravg108.avg(find(chansL),:)=0;
+
 figure
 subplot(2,2,1)
 cfg=[];
 cfg.layout='4D248.lay';
-cfg.xlim=[0.118 0.157]; % from 300ms to 600ms in 10ms interval
-cfg.zlim=[-6*10^(-14) 7*10^(-14)];
+cfg.xlim=[0.316 0.5]; % from 300ms to 600ms in 10ms interval
+cfg.zlim=[-3*10^(-14) 3*10^(-14)];
 cfg.interactive = 'yes';
 cfg.colorbar='yes'; % change to 'no' in order to avoid the annoying colorbar that squeeze the plot
-%cfg.comment='no'; % to ommit the text from the plot
+cfg.colormap = gray(100);
+cfg.comment='no'; % to ommit the text from the plot
 ft_topoplotER(cfg,gravg102);
+title('pre right');
 subplot(2,2,2)
 ft_topoplotER(cfg,gravg106);
-cfg.xlim=[0.157 0.187];
+title('post right');
 subplot(2,2,3)
-ft_topoplotER(cfg,gravg102);
+ft_topoplotER(cfg,gravg104);
+title('pre left');
 subplot(2,2,4)
-ft_topoplotER(cfg,gravg106);
+ft_topoplotER(cfg,gravg108);
+title('post left');
 
 % left index
 figure
@@ -404,10 +411,11 @@ subplot(2,1,2)
 ft_topoplotTFR(cfg,TF108lgavg);
 
 %% RMS Analysis
+cd /home/meg/Data/Maor/Hypnosis/Subjects
 load allSubs
 
 a = 1;
-for i = [7:12, 14:19, 21, 25:28]
+for i = [7:19, 21, 22, 25:28] % only good subs
     eval(['chansL = ismember(sub',num2str(i),'con102.label, LRpairs(:,1));']) % sum = 114 (because I deleted chan A41
     eval(['chansR = ismember(sub',num2str(i),'con102.label, LRpairs(:,2));']) % sum = 115
     for j = [102:2:108]
@@ -438,31 +446,122 @@ for k = [102:2:108]
     eval(['seCon',num2str(k),'RMSR=std(con',num2str(k),'RMSR)/sqrt(17);']);
 end;
 
+save RMS19subs
+
+%% plot RMS
+load RMS19subs
 load time
-% plot RMS
+
+% contra lateral
 figure
-subplot(2,1,1)
+subplot(2,1,2)
 plot(time,meanCon102RMSL,'b') % LH pre right
+ylim([-1*10^(-14) 8*10^(-14)]);
 hold on;
 jbfill(time,meanCon102RMSL+seCon102RMSL,meanCon102RMSL-seCon102RMSL,[0,0,1],[0,0,1],0,0.3)
 plot(time,meanCon106RMSL,'r') % LH post right
+ylim([-1*10^(-14) 8*10^(-14)]);
 jbfill(time,meanCon106RMSL+seCon106RMSL,meanCon106RMSL-seCon106RMSL,[1,0,0],[1,0,0],0,0.3)
 grid;
-subplot(2,1,2)
+title('Right Hand (n=19); Blue - pre hypnosis, Red - during hypnosis');
+subplot(2,1,1)
 plot(time,meanCon104RMSR,'b') % RH pre left
+ylim([-1*10^(-14) 8*10^(-14)]);
 hold on;
 jbfill(time,meanCon104RMSR+seCon104RMSR,meanCon104RMSR-seCon104RMSR,[0,0,1],[0,0,1],0,0.3)
 plot(time,meanCon108RMSR,'r') % RH post left
+ylim([-1*10^(-14) 8*10^(-14)]);
 jbfill(time,meanCon108RMSR+seCon108RMSR,meanCon108RMSR-seCon108RMSR,[1,0,0],[1,0,0],0,0.3)
 grid;
+title('Left Hand (n=19); Blue - pre hypnosis, Red - during hypnosis');
 
+% ipsi lateral
+figure
+subplot(2,1,2)
+plot(time,meanCon102RMSR,'b') 
+ylim([-1*10^(-14) 8*10^(-14)]);
+hold on;
+jbfill(time,meanCon102RMSR+seCon102RMSR,meanCon102RMSR-seCon102RMSR,[0,0,1],[0,0,1],0,0.3)
+plot(time,meanCon106RMSR,'r') 
+ylim([-1*10^(-14) 8*10^(-14)]);
+jbfill(time,meanCon106RMSR+seCon106RMSR,meanCon106RMSR-seCon106RMSR,[1,0,0],[1,0,0],0,0.3)
+grid;
+title('Right Hand (n=19); Blue - pre hypnosis, Red - during hypnosis');
+subplot(2,1,1)
+plot(time,meanCon104RMSL,'b')
+ylim([-1*10^(-14) 8*10^(-14)]);
+hold on;
+jbfill(time,meanCon104RMSL+seCon104RMSL,meanCon104RMSL-seCon104RMSL,[0,0,1],[0,0,1],0,0.3)
+plot(time,meanCon108RMSL,'r') 
+ylim([-1*10^(-14) 8*10^(-14)]);
+jbfill(time,meanCon108RMSL+seCon108RMSL,meanCon108RMSL-seCon108RMSL,[1,0,0],[1,0,0],0,0.3)
+grid;
+title('Left Hand (n=19); Blue - pre hypnosis, Red - during hypnosis');
+
+% diff
 figure;
 plot(time, meanCon102RMSL - meanCon106RMSL, 'b')
 hold on;
 plot(time, meanCon104RMSR - meanCon108RMSR, 'r')
 grid;
 
-% RMS differences table for the 3 comps: 118-157ms, 157-187ms, 311-500ms
+% plot RMS Grey scale
+% Contral lateral sensors
+figure
+subplot(2,1,1)
+rectangle('Position',[0.306 0.1*10^(-14) (0.5-0.306) 4.5*10^(-14)],...
+    'LineWidth',1,'Facecolor',[0.95 0.95 0.95]);
+hold on;
+plot(time,meanCon102RMSL,'k--') % LH pre right
+jbfill(time,meanCon102RMSL+seCon102RMSL,meanCon102RMSL-seCon102RMSL,[0,0,0],[0,0,0],0,0.3)
+plot(time,meanCon106RMSL,'k') % LH post right
+jbfill(time,meanCon106RMSL+seCon106RMSL,meanCon106RMSL-seCon106RMSL,[0.45,0.45,0.45],[0.45,0.45,0.45],0,0.3)
+plot([0 0], [-1*10^(-14) 8*10^(-14)], 'k--');
+ylim([-1*10^(-14) 8*10^(-14)]);
+xlim([-0.15 0.5]);
+title('Right Hand (n=19); -- pre hypnosis, - during hypnosis');
+subplot(2,1,2)
+rectangle('Position',[0.306 0.1*10^(-14) (0.5-0.306) 4.5*10^(-14)],...
+    'LineWidth',1,'Facecolor',[0.95 0.95 0.95]);
+hold on;
+plot(time,meanCon104RMSR,'k--') % RH pre left
+jbfill(time,meanCon104RMSR+seCon104RMSR,meanCon104RMSR-seCon104RMSR,[0,0,0],[0,0,0],0,0.3)
+plot(time,meanCon108RMSR,'k') % RH post left
+jbfill(time,meanCon108RMSR+seCon108RMSR,meanCon108RMSR-seCon108RMSR,[0.45,0.45,0.45],[0.45,0.45,0.45],0,0.3)
+plot([0 0], [-1*10^(-14) 8*10^(-14)], 'k--');
+ylim([-1*10^(-14) 8*10^(-14)]);
+xlim([-0.15 0.5]);
+title('Left Hand (n=19); -- pre hypnosis, - during hypnosis');
+
+% Ipsi lateral sensors
+figure
+subplot(2,1,1)
+rectangle('Position',[0.306 0.1*10^(-14) (0.5-0.306) 4.5*10^(-14)],...
+    'LineWidth',1,'Facecolor',[0.95 0.95 0.95]);
+hold on;
+plot(time,meanCon102RMSR,'k--') % LH pre right
+jbfill(time,meanCon102RMSR+seCon102RMSR,meanCon102RMSR-seCon102RMSR,[0,0,0],[0,0,0],0,0.3)
+plot(time,meanCon106RMSR,'k') % LH post right
+jbfill(time,meanCon106RMSR+seCon106RMSR,meanCon106RMSR-seCon106RMSR,[0.45,0.45,0.45],[0.45,0.45,0.45],0,0.3)
+plot([0 0], [-1*10^(-14) 8*10^(-14)], 'k--');
+ylim([-1*10^(-14) 8*10^(-14)]);
+xlim([-0.15 0.5]);
+title('Right Hand (n=19); -- pre hypnosis, - during hypnosis');
+subplot(2,1,2)
+rectangle('Position',[0.306 0.1*10^(-14) (0.5-0.306) 4.5*10^(-14)],...
+    'LineWidth',1,'Facecolor',[0.95 0.95 0.95]);
+hold on;
+plot(time,meanCon104RMSL,'k--') % RH pre left
+jbfill(time,meanCon104RMSL+seCon104RMSL,meanCon104RMSL-seCon104RMSL,[0,0,0],[0,0,0],0,0.3)
+plot(time,meanCon108RMSL,'k') % RH post left
+jbfill(time,meanCon108RMSL+seCon108RMSL,meanCon108RMSL-seCon108RMSL,[0.45,0.45,0.45],[0.45,0.45,0.45],0,0.3)
+plot([0 0], [-1*10^(-14) 8*10^(-14)], 'k--');
+ylim([-1*10^(-14) 8*10^(-14)]);
+xlim([-0.15 0.5]);
+title('Left Hand (n=19); -- pre hypnosis, - during hypnosis');
+
+
+% RMS differences table for 311-500ms
 for i = 1:17
 leftIndexRchans(i,:)=con104RMSR(i,:)-con108RMSR(i,:);
 rightIndexLchans(i,:)=con102RMSL(i,:)-con106RMSL(i,:);
@@ -475,14 +574,8 @@ plot(time,mean(rightIndexLchans),'r')
 grid;
 
 for i = 1:17
-    compsLeftIndex(i,1) = mean(leftIndexRchans(i,278:313));
-    compsRightIndex(i,1) = mean(rightIndexLchans(i,278:313));
-    compsLeftIndex(i,2) = mean(leftIndexRchans(i,321:343));
-    compsRightIndex(i,2) = mean(rightIndexLchans(i,321:343));
-    compsLeftIndex(i,3) = mean(leftIndexRchans(i,476:662));
-    compsRightIndex(i,3) = mean(rightIndexLchans(i,476:662));
-    compsLeftIndex(i,4) = mean(leftIndexRchans(i,442:470));
-    compsRightIndex(i,4) = mean(rightIndexLchans(i,442:470));
+    compsLeftIndex(i,1) = mean(leftIndexRchans(i,476:662));
+    compsRightIndex(i,1) = mean(rightIndexLchans(i,476:662));
 end;
 
 mean(compsLeftIndex(:,1))
@@ -498,6 +591,24 @@ RESP = 17;
 [pAnova, tableAnova, statAnova] = anova2(comp1vs2,RESP);
 
 [hTtestPostHoc, pTtestPostHoc] = ttest(compsRightIndex(:,[1 2]));
+
+% comp 3 all conditions
+comp3PreRF_LH  = mean(con102RMSL(:,476:662),2);
+comp3PreRF_RH  = mean(con102RMSR(:,476:662),2);
+comp3PostRF_LH = mean(con106RMSL(:,476:662),2);
+comp3PostRF_RH = mean(con106RMSR(:,476:662),2);
+
+comp3PreLF_LH  = mean(con104RMSL(:,476:662),2);
+comp3PreLF_RH  = mean(con104RMSR(:,476:662),2);
+comp3PostLF_LH = mean(con108RMSL(:,476:662),2);
+comp3PostLF_RH = mean(con108RMSR(:,476:662),2);
+
+RMS_Hyp_Comp3 = [comp3PreRF_LH comp3PreRF_RH comp3PreLF_LH comp3PreLF_RH comp3PostRF_LH comp3PostRF_RH...
+     comp3PostLF_LH comp3PostLF_RH]
+RMS_Hyp_Comp3 = RMS_Hyp_Comp3.*10^14;
+RMS.data=RMS_Hyp_Comp3;
+RMS.conds={'PreRF_LH','PreRF_RH','PreLF_LH','PreLF_RH','PostRF_LH','PostRF_RH','PostLF_LH','PostLF_RH'};
+save RMS_Hyp19subs_Comp3 RMS
 %% cluster analysis
 cfg=[];
 cfg.method='distance';
